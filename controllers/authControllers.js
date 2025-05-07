@@ -13,11 +13,11 @@ const generateAccessToken = (userId) => {
 };
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { email, password, name } = req.body;
+  if (!email || !password || !name) {
     res
       .status(400)
-      .json({ error: "Email or Password fields cannot be empty!" });
+      .json({ error: "Email or Password or Name fields cannot be empty!" });
     return;
   }
   const salt = await bcrypt.genSalt(10);
@@ -26,6 +26,7 @@ const register = async (req, res) => {
     userId: uuidv4(),
     email,
     password: hashedPassword,
+    name,
   };
   try {
     await createTable(userSchema);
@@ -81,7 +82,12 @@ const login = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  res.status(200).json({ message: "Logout successful" });
+};
+
 module.exports = {
   register,
   login,
+  logout,
 };
